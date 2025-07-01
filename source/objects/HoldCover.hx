@@ -9,8 +9,8 @@ class HoldCover extends FunkinSprite {
 		setPosition(get_strum().x + ((get_strum().width - width) / 2), get_strum().y + ((get_strum().height - height) / 2));
 		if (get_strum().extra.exists('theSkinData')) {
 			var skinData = get_strum().extra.get('theSkinData');
-			x -= (skinData.offsets.cover[0] ?? 0) * strumLine.strumScale;
-			y -= (skinData.offsets.cover[1] ?? 0) * strumLine.strumScale;
+			x -= (skinData.offsets.splash[0] ?? 0) * strumLine.strumScale;
+			y -= (skinData.offsets.splash[1] ?? 0) * strumLine.strumScale;
 		}
 		scrollFactor.set(get_strum().scrollFactor.x, get_strum().scrollFactor.y);
 		visible = get_strum().visible;
