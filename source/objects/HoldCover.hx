@@ -1,7 +1,7 @@
 class HoldCover extends FunkinSprite {
 	public var strumLine:StrumLine;
 	public var id:Int;
-	private function get_strum():Void
+	private function get_strum():Strum
 		return strumLine.members[id % strumLine.length];
 
 	private function setupCover():Void {
