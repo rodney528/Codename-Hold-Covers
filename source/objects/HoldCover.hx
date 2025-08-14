@@ -1,28 +1,31 @@
 class HoldCover extends FunkinSprite {
 	public var strumLine:StrumLine;
 	public var id:Int;
-	private function get_strum():Strum
+	public var strum(get, never):Strum;
+	function get_strum():Strum
 		return strumLine.members[id % strumLine.length];
 
 	private function setupCover():Void {
-		cameras = get_strum().lastDrawCameras;
-		setPosition(get_strum().x + ((get_strum().width - width) / 2), get_strum().y + ((get_strum().height - height) / 2));
-		if (get_strum().extra.exists('theSkinData')) {
-			var skinData = get_strum().extra.get('theSkinData');
+		cameras = strum.lastDrawCameras;
+		scale.set(strumLine.strumScale, strumLine.strumScale);
+		setPosition(strum.x + ((strum.width - width) / 2), strum.y + ((strum.height - height) / 2));
+		if (strum.extra.exists('theSkinData')) {
+			var skinData = strum.extra.get('theSkinData');
 			x -= (skinData.offsets.splash[0] ?? 0) * strumLine.strumScale;
 			y -= (skinData.offsets.splash[1] ?? 0) * strumLine.strumScale;
 		}
-		scrollFactor.set(get_strum().scrollFactor.x, get_strum().scrollFactor.y);
-		visible = get_strum().visible;
-		alpha = get_strum().alpha;
+		scrollFactor.set(strum.scrollFactor.x, strum.scrollFactor.y);
+		visible = strum.visible;
+		alpha = strum.alpha;
 	}
 
 	// TODO: Add skin bullshit.
-	public function init(strumLine:StrumLine, id:Int):HoldCover {
+	public function new(strumLine:StrumLine, id:Int) {
+		super();
 		this.strumLine = strumLine;
 		this.id = id;
 		antialiasing = true;
-		get_strum().extra.set('cover', this);
+		strum.extra.set('cover', this);
 		setupCover();
 		frames = Paths.getFrames('game/holdcovers/default');
 		var color:String = ['Purple', 'Blue', 'Green', 'Red'][id % strumLine.length];
@@ -36,7 +39,7 @@ class HoldCover extends FunkinSprite {
 		animation.onPlay.add((name:String, forced:Bool, reversed:Bool, frame:Int) -> {
 			switch (name) {
 				case 'end':
-					get_strum().extra.remove('cover');
+					strum.extra.remove('cover');
 					if (strumLine.opponentSide != PlayState.opponentMode)
 						kill();
 			}
@@ -50,14 +53,13 @@ class HoldCover extends FunkinSprite {
 						kill(); // jic
 			}
 		});
-		return this;
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
 		if (alive)
-			switch (get_strum().getAnim()) {
+			switch (strum.getAnim()) {
 				case 'confirm':
 					setupCover();
 			}

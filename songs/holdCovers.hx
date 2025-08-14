@@ -1,17 +1,15 @@
 import objects.HoldCover;
 
-public var holdCovers:FlxTypedGroup;
+public var holdCovers:FlxGroup;
 function createCover(event):HoldCover {
-	var cover:HoldCover = holdCovers.recycle(HoldCover, () -> return new HoldCover().init(event.note.strumLine, event.direction), true);
-	if (!cover.extra.exists('baseScale'))
-		cover.extra.set('baseScale', cover.scale.x);
-	cover.scale.set(cover.extra.get('baseScale') * event.note.strumLine.strumScale, cover.extra.get('baseScale') * event.note.strumLine.strumScale);
+	var cover:HoldCover = holdCovers.recycle(HoldCover, () -> return new HoldCover(event.note.strumLine, event.direction), true);
 	scripts.call('onHoldCoverSpawn', [event, cover]);
-	return cover;
+	holdCovers.remove(cover);
+	return holdCovers.add(cover);
 }
 
 function create():Void
-	insert(members.indexOf(splashHandler), holdCovers = new FlxTypedGroup());
+	insert(members.indexOf(splashHandler), holdCovers = new FlxGroup());
 
 function onNoteHit(event):Void {
 	var strum:Strum = event.note.strumLine.members[event.direction];
@@ -30,4 +28,4 @@ function onPlayerMiss(event):Void {
 }
 
 static function getHoldCovers():Array<HoldCover>
-	return [for (i in holdCovers) if (i.alive) i];
+	return [for (i in holdCovers) if (i.alive && i != null) i];
