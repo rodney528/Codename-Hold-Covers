@@ -18,7 +18,7 @@ function onNoteHit(event):Void {
 			createCover(event);
 	if (strum.extra.exists('cover'))
 		if (event.note.animation.name == 'holdend')
-			new FlxTimer().start(Conductor.stepCrochet / 1000 * 1.65, () -> strum.extra.get('cover')?.playAnim('end'));
+			new FlxTimer().start(Conductor.stepCrochet / 1000, () -> strum.extra.get('cover')?.playAnim('end'));
 }
 
 function onPlayerMiss(event):Void {
